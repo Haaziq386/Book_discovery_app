@@ -48,7 +48,7 @@ class BookDetailScreen extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             Text(
-              book['subjects'].isNotEmpty
+              book['subjects'] != null && book['subjects'].isNotEmpty
                   ? book['subjects'].join(', ')
                   : 'No subjects available',
               style: TextStyle(fontSize: 16),
@@ -59,7 +59,9 @@ class BookDetailScreen extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             Text(
-              book['download_count'].toString(),
+              book['download_count'] != null
+                  ? book['download_count'].toString()
+                  : '0',
               style: TextStyle(fontSize: 16),
             ),
           ],

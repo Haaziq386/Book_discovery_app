@@ -7,8 +7,6 @@ import '../models/book_model.dart';
 import '../utils/pagination_helper.dart';
 import '../utils/constants.dart';
 
-// asdfasdfasdfa
-
 class BookListScreen extends StatefulWidget {
   @override
   _BookListScreenState createState() => _BookListScreenState();
@@ -43,12 +41,9 @@ class _BookListScreenState extends State<BookListScreen> {
 
       setState(() {
         if (isSearch) {
-          books = (data['results'] as List)
-              .map((json) => BookModel.fromJson(json))
-              .toList();
+          books = (data['results'] as List).map((json) => BookModel.fromJson(json)).toList();
         } else {
-          books.addAll((data['results'] as List)
-              .map((json) => BookModel.fromJson(json)));
+          books.addAll((data['results'] as List).map((json) => BookModel.fromJson(json)));
         }
         paginationHelper.setNextUrl(data['next']);
       });
