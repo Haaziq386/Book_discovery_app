@@ -15,7 +15,7 @@ class BookListScreen extends StatefulWidget {
 class _BookListScreenState extends State<BookListScreen> {
   final ApiService apiService = ApiService(baseUrl: baseUrl);
   final PaginationHelper paginationHelper = PaginationHelper();
-  ScrollController? _scrollController; // Nullable ScrollController
+  ScrollController? _scrollController; // Nullable ScrollController -> added to handle hot reloads 
 
   List<BookModel> books = [];
   String searchTerm = "";
@@ -80,7 +80,7 @@ class _BookListScreenState extends State<BookListScreen> {
     if (_scrollController != null &&
         _scrollController!.position.pixels ==
             _scrollController!.position.maxScrollExtent) {
-      fetchBooks(); // Trigger fetch when reaching the end of the list
+      fetchBooks(); // Trigger fetch when reaching the end of the list -> allowing going to next page of API
     }
   }
 
