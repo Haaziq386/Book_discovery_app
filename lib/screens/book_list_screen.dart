@@ -41,9 +41,12 @@ class _BookListScreenState extends State<BookListScreen> {
 
       setState(() {
         if (isSearch) {
-          books = (data['results'] as List).map((json) => BookModel.fromJson(json)).toList();
+          books = (data['results'] as List)
+              .map((json) => BookModel.fromJson(json))
+              .toList();
         } else {
-          books.addAll((data['results'] as List).map((json) => BookModel.fromJson(json)));
+          books.addAll((data['results'] as List)
+              .map((json) => BookModel.fromJson(json)));
         }
         paginationHelper.setNextUrl(data['next']);
       });
@@ -101,24 +104,13 @@ class _BookListScreenState extends State<BookListScreen> {
 
                       final book = books[index];
                       return BookItem(
-                        book: {
-                          'title': book.title,
-                          'formats': {'image/jpeg': book.coverImage},
-                          'authors': [
-                            {'name': book.author}
-                          ]
-                        },
+                        book: book,
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => BookDetailScreen(book: {
-                                'title': book.title,
-                                'formats': {'image/jpeg': book.coverImage},
-                                'authors': [
-                                  {'name': book.author}
-                                ]
-                              }),
+                              builder: (context) =>
+                                  BookDetailScreen(book: book),
                             ),
                           );
                         },
