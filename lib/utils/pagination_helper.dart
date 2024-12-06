@@ -10,7 +10,7 @@ class PaginationHelper {
     isLoading = loading;
   }
 
-  void setNextUrl(String? url) {
-    nextUrl = url;
+  String? setNextUrl(String? url) {
+    return nextUrl = url;
   }
 }
