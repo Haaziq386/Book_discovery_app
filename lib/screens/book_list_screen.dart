@@ -17,6 +17,7 @@ class _BookListScreenState extends State<BookListScreen> {
   final PaginationHelper paginationHelper = PaginationHelper();
 
   List<BookModel> books = [];
+  String searchTerm = "";
 
   @override
   void initState() {
@@ -24,7 +25,7 @@ class _BookListScreenState extends State<BookListScreen> {
     fetchBooks();
   }
 
-  Future<void> fetchBooks() async {
+  Future<void> fetchBooks({bool isSearch = false}) async {
     if (paginationHelper.isLoading) return;
 
     setState(() {
@@ -32,13 +33,22 @@ class _BookListScreenState extends State<BookListScreen> {
     });
 
     try {
-      final data = await apiService.fetchBooks('$baseUrl');
+      final data = await apiService.fetchBooks(
+        isSearch && searchTerm.isNotEmpty
+            ? "$baseUrl?search=$searchTerm"
+            : paginationHelper.nextUrl ?? baseUrl,
+      );
 
       setState(() {
-        do {
+        if (isSearch) {
+          books = (data['results'] as List)
+              .map((json) => BookModel.fromJson(json))
+              .toList();
+        } else {
           books.addAll((data['results'] as List)
               .map((json) => BookModel.fromJson(json)));
-        } while (paginationHelper.setNextUrl(data['next']) != null);
+        }
+        paginationHelper.setNextUrl(data['next']);
       });
     } catch (e) {
       print('Error fetching books: $e');
@@ -47,6 +57,13 @@ class _BookListScreenState extends State<BookListScreen> {
         paginationHelper.setLoading(false);
       });
     }
+  }
+
+  void onSearchChanged(String query) {
+    setState(() {
+      searchTerm = query;
+    });
+    fetchBooks(isSearch: true);
   }
 
   @override
@@ -66,7 +83,7 @@ class _BookListScreenState extends State<BookListScreen> {
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.search),
               ),
-              onChanged: null,
+              onChanged: onSearchChanged,
             ),
           ),
           // Book List
