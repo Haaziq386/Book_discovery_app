@@ -1,6 +1,8 @@
+import 'constants.dart';
+
 class PaginationHelper {
   bool isLoading = false;
-  String? nextUrl;
+  String? nextUrl = baseUrl;
 
   bool shouldLoadMore() {
     return !isLoading && nextUrl != null;

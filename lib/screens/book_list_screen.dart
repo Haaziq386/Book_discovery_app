@@ -15,6 +15,7 @@ class BookListScreen extends StatefulWidget {
 class _BookListScreenState extends State<BookListScreen> {
   final ApiService apiService = ApiService(baseUrl: baseUrl);
   final PaginationHelper paginationHelper = PaginationHelper();
+  ScrollController? _scrollController; // Nullable ScrollController
 
   List<BookModel> books = [];
   String searchTerm = "";
@@ -22,11 +23,25 @@ class _BookListScreenState extends State<BookListScreen> {
   @override
   void initState() {
     super.initState();
+    _initializeScrollController();
     fetchBooks();
   }
 
+  void _initializeScrollController() {
+    _scrollController?.dispose(); // Dispose old controller if hot reload caused issues
+    _scrollController = ScrollController();
+    _scrollController!.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController?.removeListener(_scrollListener);
+    _scrollController?.dispose();
+    super.dispose();
+  }
+
   Future<void> fetchBooks({bool isSearch = false}) async {
-    if (paginationHelper.isLoading) return;
+    if (!isSearch && !paginationHelper.shouldLoadMore()) return;
 
     setState(() {
       paginationHelper.setLoading(true);
@@ -36,7 +51,8 @@ class _BookListScreenState extends State<BookListScreen> {
       final data = await apiService.fetchBooks(
         isSearch && searchTerm.isNotEmpty
             ? "$baseUrl?search=$searchTerm"
-            : paginationHelper.nextUrl ?? baseUrl,
+            : paginationHelper.nextUrl ?? baseUrl,  // initial loading not happening could be due to this line :: as nexturl not set intially
+                                                    //solved by adding baseUrl as default value in  PaginationHelper class
       );
 
       setState(() {
@@ -44,11 +60,12 @@ class _BookListScreenState extends State<BookListScreen> {
           books = (data['results'] as List)
               .map((json) => BookModel.fromJson(json))
               .toList();
+          paginationHelper.setNextUrl(data['next']); // Reset pagination for search
         } else {
           books.addAll((data['results'] as List)
               .map((json) => BookModel.fromJson(json)));
+          paginationHelper.setNextUrl(data['next']); // Set next URL
         }
-        paginationHelper.setNextUrl(data['next']);
       });
     } catch (e) {
       print('Error fetching books: $e');
@@ -56,6 +73,14 @@ class _BookListScreenState extends State<BookListScreen> {
       setState(() {
         paginationHelper.setLoading(false);
       });
+    }
+  }
+
+  void _scrollListener() {
+    if (_scrollController != null &&
+        _scrollController!.position.pixels ==
+            _scrollController!.position.maxScrollExtent) {
+      fetchBooks(); // Trigger fetch when reaching the end of the list
     }
   }
 
@@ -68,6 +93,10 @@ class _BookListScreenState extends State<BookListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (books.isEmpty && !paginationHelper.isLoading) {
+      fetchBooks(); // Fetch books if the list is empty (handles hot restart case)
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Book Discovery'),
@@ -91,15 +120,14 @@ class _BookListScreenState extends State<BookListScreen> {
             child: books.isEmpty && paginationHelper.isLoading
                 ? LoadingSpinner()
                 : ListView.builder(
-                    itemCount: books.length + 1,
+                    controller: _scrollController, // Use the scroll controller
+                    itemCount: books.length + 1, // Add one for the loading spinner
                     itemBuilder: (context, index) {
                       if (index == books.length) {
-                        if (paginationHelper.shouldLoadMore()) {
-                          fetchBooks();
-                          return LoadingSpinner(size: 30);
-                        } else {
-                          return SizedBox.shrink();
-                        }
+                        // Show spinner at the bottom during loading
+                        return paginationHelper.isLoading
+                            ? LoadingSpinner(size: 30)
+                            : SizedBox.shrink();
                       }
 
                       final book = books[index];
