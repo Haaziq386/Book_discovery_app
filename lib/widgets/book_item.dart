@@ -21,7 +21,6 @@ class BookItem extends StatelessWidget {
       title: Text(book.title),
       subtitle: Text('${book.author}'),
       // subtitle: Text('${book.author}\n${book.subjects.join(", ")}'),
-      // isThreeLine: true,
       onTap: onTap,
     );
   }
