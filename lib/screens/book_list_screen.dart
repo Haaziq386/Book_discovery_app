@@ -102,6 +102,14 @@ class _BookListScreenState extends State<BookListScreen> {
       fetchBooks(); // Fetch books if the list is empty (handles hot restart case)
     }
 
+    final List<Color> colors = [
+      Color(0xFF7EA4F3),
+      Color(0xFFF0A55E),
+      Color(0xFFED628A),
+      Color(0xFFA47EF4),
+      Color(0xFF68E3BD)
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Book Discovery'),
@@ -137,17 +145,35 @@ class _BookListScreenState extends State<BookListScreen> {
                       }
 
                       final book = books[index];
-                      return BookItem(
-                        book: book,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  BookDetailScreen(book: book),
+                      return Container(
+                        margin:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        decoration: BoxDecoration(
+                          color: colors[index % colors.length],
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(20.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset:
+                                  Offset(4, 4), // changes position of shadow
                             ),
-                          );
-                        },
+                          ],
+                        ),
+                        child: BookItem(
+                          book: book,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    BookDetailScreen(book: book),
+                              ),
+                            );
+                          },
+                        ),
                       );
                     },
                   ),
