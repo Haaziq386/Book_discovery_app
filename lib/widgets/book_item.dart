@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:book_discovery_app/models/book_model.dart';
+import 'package:book_discovery_app/utils/constants.dart';
 
 class BookItem extends StatelessWidget {
   final BookModel book;

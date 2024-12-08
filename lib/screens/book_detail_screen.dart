@@ -20,7 +20,7 @@ class BookDetailScreen extends StatelessWidget {
           child: CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
-                backgroundColor: kMainColor,
+                backgroundColor: Color(0xFFFED6B6),
                 expandedHeight: MediaQuery.of(context).size.height * 0.5,
                 automaticallyImplyLeading: false,
                 flexibleSpace: Container(
@@ -52,8 +52,8 @@ class BookDetailScreen extends StatelessWidget {
                           child: Container(
                             margin: EdgeInsets.only(
                                 bottom:
-                                    MediaQuery.of(context).size.height * 0.02),
-                            width: MediaQuery.of(context).size.width * 0.6,
+                                    MediaQuery.of(context).size.height * 0.05),
+                            width: MediaQuery.of(context).size.width * 0.45,
                             height: MediaQuery.of(context).size.height * 0.35,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
@@ -63,7 +63,7 @@ class BookDetailScreen extends StatelessWidget {
                                     : AssetImage(
                                             'assets/icons/book_placeholder.gif')
                                         as ImageProvider,
-                                fit: BoxFit.scaleDown,
+                                fit: BoxFit.fill,
                               ),
                             ),
                           ),
