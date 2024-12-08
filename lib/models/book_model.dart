@@ -5,6 +5,8 @@ class BookModel {
   final String author;
   final List<String> subjects;
   final int downloadCount;
+  final List<String> bookshelves;
+  final Map<String, String> formats;
 
   BookModel({
     required this.id,
@@ -13,6 +15,8 @@ class BookModel {
     required this.author,
     required this.subjects,
     required this.downloadCount,
+    required this.bookshelves,
+    required this.formats,
   });
 
   factory BookModel.fromJson(Map<String, dynamic> json) {
@@ -25,6 +29,9 @@ class BookModel {
           : 'Unknown Author',
       subjects: List<String>.from(json['subjects']),
       downloadCount: json['download_count'],
+      bookshelves: List<String>.from(json['bookshelves']),
+      formats: (json['formats'] as Map<String, dynamic>)
+          .map((key, value) => MapEntry(key, value.toString())),
     );
   }
 }

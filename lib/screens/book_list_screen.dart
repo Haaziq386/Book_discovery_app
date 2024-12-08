@@ -15,7 +15,8 @@ class BookListScreen extends StatefulWidget {
 class _BookListScreenState extends State<BookListScreen> {
   final ApiService apiService = ApiService(baseUrl: baseUrl);
   final PaginationHelper paginationHelper = PaginationHelper();
-  ScrollController? _scrollController; // Nullable ScrollController -> added to handle hot reloads 
+  ScrollController?
+      _scrollController; // Nullable ScrollController -> added to handle hot reloads
 
   List<BookModel> books = [];
   String searchTerm = "";
@@ -28,7 +29,8 @@ class _BookListScreenState extends State<BookListScreen> {
   }
 
   void _initializeScrollController() {
-    _scrollController?.dispose(); // Dispose old controller if hot reload caused issues
+    _scrollController
+        ?.dispose(); // Dispose old controller if hot reload caused issues
     _scrollController = ScrollController();
     _scrollController!.addListener(_scrollListener);
   }
@@ -51,16 +53,19 @@ class _BookListScreenState extends State<BookListScreen> {
       final data = await apiService.fetchBooks(
         isSearch && searchTerm.isNotEmpty
             ? "$baseUrl?search=$searchTerm"
-            : paginationHelper.nextUrl ?? baseUrl,  // initial loading not happening could be due to this line :: as nexturl not set intially
-                                                    //solved by adding baseUrl as default value in  PaginationHelper class
+            : paginationHelper.nextUrl ??
+                baseUrl, // initial loading not happening could be due to this line :: as nexturl not set intially
+        //solved by adding baseUrl as default value in  PaginationHelper class
       );
 
       setState(() {
+        print("json: ${data}"); //debugging statement
         if (isSearch) {
           books = (data['results'] as List)
               .map((json) => BookModel.fromJson(json))
               .toList();
-          paginationHelper.setNextUrl(data['next']); // Reset pagination for search
+          paginationHelper
+              .setNextUrl(data['next']); // Reset pagination for search
         } else {
           books.addAll((data['results'] as List)
               .map((json) => BookModel.fromJson(json)));
@@ -121,7 +126,8 @@ class _BookListScreenState extends State<BookListScreen> {
                 ? LoadingSpinner()
                 : ListView.builder(
                     controller: _scrollController, // Use the scroll controller
-                    itemCount: books.length + 1, // Add one for the loading spinner
+                    itemCount:
+                        books.length + 1, // Add one for the loading spinner
                     itemBuilder: (context, index) {
                       if (index == books.length) {
                         // Show spinner at the bottom during loading

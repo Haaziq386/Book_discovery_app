@@ -6,13 +6,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:book_discovery_app/widgets/custom_tab_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BookDetailScreen extends StatelessWidget {
   final BookModel book;
-
   BookDetailScreen({required this.book});
   @override
   Widget build(BuildContext context) {
+    print(book.formats);
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -89,55 +90,118 @@ class BookDetailScreen extends StatelessWidget {
                           fontWeight: FontWeight.w400)),
                 ),
                 Container(
-                  height: 28,
+                  // height: 28,
                   margin: EdgeInsets.only(top: 23, left: 0),
                   padding: EdgeInsets.only(left: 0),
                   child: DefaultTabController(
                     length: 3,
-                    child: TabBar(
-                      labelPadding: EdgeInsets.all(0),
-                      indicatorPadding: EdgeInsets.all(0),
-                      isScrollable: true,
-                      labelColor: Colors.black,
-                      unselectedLabelColor: Colors.grey,
-                      labelStyle: GoogleFonts.openSans(
-                          fontSize: 14, fontWeight: FontWeight.w600),
-                      unselectedLabelStyle: GoogleFonts.openSans(
-                          fontSize: 14, fontWeight: FontWeight.w400),
-                      indicator: RoundRectangleTabIndicator(
-                          color: Colors.black, weight: 2, width: 25),
-                      tabs: [
-                        Tab(
-                          child: Container(
-                            margin: EdgeInsets.only(right: 35),
-                            child: Text('Subjects'),
-                          ),
+                    child: Column(
+                      children: [
+                        TabBar(
+                          labelPadding: EdgeInsets.all(0),
+                          indicatorPadding: EdgeInsets.all(0),
+                          isScrollable: true,
+                          labelColor: Colors.black,
+                          unselectedLabelColor: Colors.grey,
+                          labelStyle: GoogleFonts.openSans(
+                              fontSize: 14, fontWeight: FontWeight.w600),
+                          unselectedLabelStyle: GoogleFonts.openSans(
+                              fontSize: 14, fontWeight: FontWeight.w400),
+                          indicator: RoundRectangleTabIndicator(
+                              color: Colors.black, weight: 2, width: 25),
+                          tabs: [
+                            Tab(
+                              child: Container(
+                                margin: EdgeInsets.only(right: 35),
+                                child: Text('Subjects'),
+                              ),
+                            ),
+                            Tab(
+                              child: Container(
+                                margin: EdgeInsets.only(right: 35),
+                                child: Text('Bookshelves'),
+                              ),
+                            ),
+                            Tab(
+                              child: Container(
+                                margin: EdgeInsets.only(right: 35),
+                                child: Text('Read Online'),
+                              ),
+                            ),
+                          ],
                         ),
-                        Tab(
-                          child: Container(
-                            margin: EdgeInsets.only(right: 35),
-                            child: Text('Bookshelves'),
-                          ),
-                        ),
-                        Tab(
-                          child: Container(
-                            margin: EdgeInsets.only(right: 35),
-                            child: Text('Links'),
-                          ),
-                        ),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.3,
+                            child: TabBarView(
+                              children: [
+                                // Subjects Tab
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 25, vertical: 10),
+                                  child: Text(
+                                    book.subjects.join(
+                                        '\n'), // Join list elements with newline,
+                                    style: GoogleFonts.openSans(
+                                        fontSize: 12,
+                                        color:
+                                            const Color.fromARGB(255, 0, 0, 0),
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                                // Bookshelves Tab
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 25, vertical: 10),
+                                  child: Text(
+                                    book.bookshelves.join('\n'),
+                                    style: GoogleFonts.openSans(
+                                        fontSize: 12,
+                                        color:
+                                            const Color.fromARGB(255, 0, 0, 0),
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                                // Links Tab
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 25, vertical: 10),
+                                  child: ListView.builder(
+                                    itemCount: book.formats.length,
+                                    itemBuilder: (context, index) {
+                                      final formatKey = book.formats.keys
+                                          .elementAt(
+                                              index); // Get format name (key)
+                                      final formatLink = book.formats.values
+                                          .elementAt(index); // Get link (value)
+                                      return InkWell(
+                                        onTap: () async {
+                                          if (formatLink.isNotEmpty) {
+                                            await launchUrl(Uri.parse(
+                                                formatLink)); // Requires `url_launcher` package
+                                          }
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5),
+                                          child: Text(
+                                            formatKey,
+                                            style: GoogleFonts.openSans(
+                                                fontSize: 12,
+                                                color: const Color.fromARGB(
+                                                    255, 0, 0, 0),
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ))
                       ],
                     ),
                   ),
                 ),
-                Padding(
-                    padding: EdgeInsets.only(left: 25, right: 25, bottom: 25),
-                    child: Text(
-                      '${book.subjects}',
-                      style: GoogleFonts.openSans(
-                          fontSize: 12,
-                          color: const Color.fromARGB(255, 0, 0, 0),
-                          fontWeight: FontWeight.w400),
-                    )),
               ]))
             ],
           ),
