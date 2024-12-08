@@ -31,7 +31,9 @@ class BookDetailScreen extends StatelessWidget {
                           left: 25,
                           top: 35,
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
                             child: Container(
                               width: 32, //is this hardcoding??
                               height: 32,
