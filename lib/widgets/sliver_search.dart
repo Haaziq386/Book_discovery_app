@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BackgroundWave extends StatelessWidget {
   final double height;
@@ -64,6 +65,7 @@ class SliverSearchAppBar extends SliverPersistentHeaderDelegate {
         shrinkOffset > minExtent ? minExtent : shrinkOffset;
     double offset = (minExtent - adjustedShrinkOffset) * 0.5;
     double topPadding = MediaQuery.of(context).padding.top + 16;
+    double leftPadding = MediaQuery.of(context).padding.left;
     const pink = const Color(0xFFFACCCC);
     const grey = const Color(0xFFF2F2F7);
 
@@ -72,6 +74,30 @@ class SliverSearchAppBar extends SliverPersistentHeaderDelegate {
         const BackgroundWave(
           height: 280,
         ),
+        // Title
+        Positioned(
+          top: topPadding + 16,
+          left: leftPadding + 16,
+          child: Text(
+            'BOOK-INATOR',
+            style: GoogleFonts.yujiMai(
+              fontSize: 24,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        //Image , i want it to be half behind the search bar
+        Positioned(
+          top: topPadding,
+          right: 16,
+          child: Image.asset(
+            'assets/images/book.png',
+            width: 120,
+            height: 120,
+          ),
+        ),
+        //search bar
         Positioned(
           top: topPadding + offset,
           left: 16,
