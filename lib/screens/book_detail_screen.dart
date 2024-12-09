@@ -20,7 +20,7 @@ class BookDetailScreen extends StatelessWidget {
           child: CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
-                backgroundColor: Color(0xFFFED6B6),
+                backgroundColor: kMainColor,
                 expandedHeight: MediaQuery.of(context).size.height * 0.5,
                 automaticallyImplyLeading: false,
                 flexibleSpace: Container(
