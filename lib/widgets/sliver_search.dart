@@ -64,6 +64,8 @@ class SliverSearchAppBar extends SliverPersistentHeaderDelegate {
         shrinkOffset > minExtent ? minExtent : shrinkOffset;
     double offset = (minExtent - adjustedShrinkOffset) * 0.5;
     double topPadding = MediaQuery.of(context).padding.top + 16;
+    const pink = const Color(0xFFFACCCC);
+    const grey = const Color(0xFFF2F2F7);
 
     return Stack(
       children: [
@@ -74,13 +76,22 @@ class SliverSearchAppBar extends SliverPersistentHeaderDelegate {
           top: topPadding + offset,
           left: 16,
           right: 16,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width - 32,
             child: TextField(
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Search by title, author...',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.search),
+                filled: true,
+                fillColor: Colors.white,
+                focusColor: pink,
+                focusedBorder: _border(pink),
+                border: _border(grey),
+                enabledBorder: _border(grey),
+                contentPadding: const EdgeInsets.symmetric(vertical: 20),
+                prefixIcon: const Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                ),
               ),
               onChanged: onSearchChanged,
             ),
@@ -89,6 +100,11 @@ class SliverSearchAppBar extends SliverPersistentHeaderDelegate {
       ],
     );
   }
+
+  OutlineInputBorder _border(Color color) => OutlineInputBorder(
+        borderSide: BorderSide(width: 0.5, color: color),
+        borderRadius: BorderRadius.circular(12),
+      );
 
   @override
   double get maxExtent => 280;
