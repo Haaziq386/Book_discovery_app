@@ -132,9 +132,10 @@ class BookDetailScreen extends StatelessWidget {
                           ],
                         ),
                         SizedBox(
-                            height: MediaQuery.of(context).size.height *
-                                0.3, //have to fix this to make size dynamic
+                            height: MediaQuery.of(context).size.height * 0.25,
                             child: TabBarView(
+                              physics:
+                                  AlwaysScrollableScrollPhysics(), //fixed scrolling issue
                               children: [
                                 // Subjects Tab
                                 Padding(
@@ -168,6 +169,8 @@ class BookDetailScreen extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 25, vertical: 10),
                                   child: ListView.builder(
+                                    physics:
+                                        AlwaysScrollableScrollPhysics(), //----------------testing
                                     itemCount: book.formats.length,
                                     itemBuilder: (context, index) {
                                       final formatKey = book.formats.keys
@@ -241,25 +244,25 @@ class BookDetailScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        margin: EdgeInsets.only(left: 25, right: 25, bottom: 25),
-        height: 49,
-        color: Colors.transparent,
-        child: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          child: Text('Bookmark it',
-              style: GoogleFonts.openSans(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600)),
-        ),
-      ),
+      // bottomNavigationBar: Container(
+      //   margin: EdgeInsets.only(left: 25, right: 25, bottom: 25),
+      //   height: 49,
+      //   color: Colors.transparent,
+      //   child: ElevatedButton(
+      //     onPressed: () {},
+      //     style: ElevatedButton.styleFrom(
+      //       backgroundColor: Colors.green,
+      //       shape: RoundedRectangleBorder(
+      //         borderRadius: BorderRadius.circular(10),
+      //       ),
+      //     ),
+      //     child: Text('Bookmark it',
+      //         style: GoogleFonts.openSans(
+      //             fontSize: 14,
+      //             color: Colors.white,
+      //             fontWeight: FontWeight.w600)),
+      //   ),
+      // ),
     );
   }
 }
