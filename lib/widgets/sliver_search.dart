@@ -69,6 +69,8 @@ class SliverSearchAppBar extends SliverPersistentHeaderDelegate {
     const pink = const Color(0xFFFACCCC);
     const grey = const Color(0xFFF2F2F7);
 
+    double imageOpacity = (1 - shrinkOffset / maxExtent).clamp(0.0, 1.0);
+
     return Stack(
       children: [
         const BackgroundWave(
@@ -91,10 +93,14 @@ class SliverSearchAppBar extends SliverPersistentHeaderDelegate {
         Positioned(
           top: topPadding,
           right: 16,
-          child: Image.asset(
-            'assets/images/book.png',
-            width: 120,
-            height: 120,
+          child: Opacity(
+            opacity: imageOpacity.clamp(
+                0.0, 1.0), // Ensure opacity stays within bounds
+            child: Image.asset(
+              'assets/images/book.png',
+              width: 120,
+              height: 120,
+            ),
           ),
         ),
         //search bar
