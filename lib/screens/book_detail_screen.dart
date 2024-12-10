@@ -173,23 +173,55 @@ class BookDetailScreen extends StatelessWidget {
                                               index); // Get format name (key)
                                       final formatLink = book.formats.values
                                           .elementAt(index); // Get link (value)
-                                      return InkWell(
-                                        onTap: () async {
-                                          if (formatLink.isNotEmpty) {
-                                            await launchUrl(Uri.parse(
-                                                formatLink)); // Requires `url_launcher` package
-                                          }
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 5),
-                                          child: Text(
-                                            formatKey,
-                                            style: GoogleFonts.openSans(
-                                                fontSize: 12,
-                                                color: const Color.fromARGB(
-                                                    255, 0, 0, 0),
-                                                fontWeight: FontWeight.w400),
+                                      return Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: InkWell(
+                                          onTap: () async {
+                                            if (formatLink.isNotEmpty) {
+                                              await launchUrl(Uri.parse(
+                                                  formatLink)); // Requires `url_launcher` package
+                                            }
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 12, horizontal: 16),
+                                            decoration: BoxDecoration(
+                                              color: Colors
+                                                  .blue, // Background color for the button
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      10), // Rounded corners
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  color: Colors
+                                                      .black12, // Slight shadow for elevation effect
+                                                  blurRadius: 4,
+                                                  offset: Offset(0, 2),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  formatKey,
+                                                  style: GoogleFonts.openSans(
+                                                    fontSize: 14,
+                                                    color: Colors
+                                                        .white, // Text color for better contrast
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                const Icon(
+                                                  Icons.open_in_new,
+                                                  color: Colors
+                                                      .white, // Icon color
+                                                  size: 18,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       );
