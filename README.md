@@ -108,6 +108,11 @@ lib/
 6. **Issues with Automated Searching**:Searching on each letter was slow , so went for debouncing.
 7. **Responsiveness Issues**:Tested code on multiple devices ,to ensure it's responsiveness.
 
+### Other Limitations
+
+1. A stable internet connection is required for the app to function properly since it relies on API requests to fetch data.
+2. The API does not provide sufficient details about the cost of the book, which limits functionality related to pricing. It also lacks detailed data needed to create a comprehensive "About" section in the book detail screen.
+3. For simplicity, the formats in the "Read Online" section are displayed as they are provided by the API (e.g., text/html). This could be improved by renaming the formats to more user-friendly terms (e.g., changing text/html to HTML) for better readability.
 ---
 
 ## Video Demo
