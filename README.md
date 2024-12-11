@@ -24,7 +24,7 @@ Book-Inator is a modern Flutter-based book discovery app that allows users to br
 ## Tech Stack
 
 - **Flutter/Dart** for the mobile application
-- **RESTful APIs** for fetching book data
+- **RESTful APIs** for fetching book data (https://gutendex.com/books/)
 
 ### Libraries Used
 
@@ -113,4 +113,4 @@ lib/
 ## Video Demo
 
 ---
-## Made with ❤️
+## Made with ❤️ for Intern Assignment of Biliion Labs
