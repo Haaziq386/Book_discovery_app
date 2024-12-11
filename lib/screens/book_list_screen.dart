@@ -5,7 +5,7 @@ import '../widgets/loading_spinner.dart';
 import '../services/api_service.dart';
 import '../models/book_model.dart';
 import '../widgets/sliver_search.dart';
-import '../widgets/debouncer.dart';
+import '../utils/debouncer.dart';
 
 class BookListScreen extends StatefulWidget {
   @override
