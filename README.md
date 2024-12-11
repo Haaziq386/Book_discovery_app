@@ -8,6 +8,10 @@ Book-Inator is a modern Flutter-based book discovery app that allows users to br
 
 ---
 
+## Video Demo
+
+---
+
 ## Features
 
 - **Clean and Responsive User Interface**
@@ -119,7 +123,4 @@ lib/
 3. For simplicity, the formats in the "Read Online" section are displayed as they are provided by the API (e.g., text/html). This could be improved by renaming the formats to more user-friendly terms (e.g., changing text/html to HTML) for better readability.
 ---
 
-## Video Demo
-
----
 ## Made with ❤️ for Intern Assignment of Biliion Labs
