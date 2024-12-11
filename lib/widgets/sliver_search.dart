@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../widgets/debouncer.dart';
 
 class BackgroundWave extends StatelessWidget {
   final double height;
@@ -55,14 +56,16 @@ class BackgroundWaveClipper extends CustomClipper<Path> {
 }
 
 class SliverSearchAppBar extends SliverPersistentHeaderDelegate {
-  TextEditingController _searchController = TextEditingController();
-
+  final TextEditingController searchController;
   final VoidCallback clearBooks;
   final Function(String?) fetchBooks;
+  final Debouncer debouncer;
 
   SliverSearchAppBar({
     required this.clearBooks,
     required this.fetchBooks,
+    required this.searchController,
+    required this.debouncer,
   });
   @override
   Widget build(
@@ -117,7 +120,7 @@ class SliverSearchAppBar extends SliverPersistentHeaderDelegate {
           child: SizedBox(
             width: MediaQuery.of(context).size.width - 32,
             child: TextFormField(
-              controller: _searchController,
+              controller: searchController,
               decoration: InputDecoration(
                 hintText: 'Search by title, author...',
                 filled: true,
@@ -133,14 +136,34 @@ class SliverSearchAppBar extends SliverPersistentHeaderDelegate {
                     color: Colors.grey,
                   ),
                   onPressed: () {
+                    print("---------------Pressed-----------");
                     clearBooks();
-                    fetchBooks(_searchController.text);
+                    fetchBooks(searchController.text);
+                    print("---------------Pressed over -----------");
                   },
                 ),
+                suffixIcon: searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: Icon(Icons.clear),
+                        onPressed: () {
+                          searchController.clear();
+                          clearBooks();
+                          fetchBooks(null);
+                        },
+                      )
+                    : null,
               ),
+              onChanged: (value) {
+                debouncer.run(() {
+                  clearBooks();
+                  fetchBooks(value);
+                });
+              },
               onFieldSubmitted: (value) {
+                print("---------------Submitted-----------");
                 clearBooks();
                 fetchBooks(value);
+                print("---------------Submitted over-----------");
               },
             ),
           ),

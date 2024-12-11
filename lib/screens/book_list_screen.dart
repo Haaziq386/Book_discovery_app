@@ -5,6 +5,7 @@ import '../widgets/loading_spinner.dart';
 import '../services/api_service.dart';
 import '../models/book_model.dart';
 import '../widgets/sliver_search.dart';
+import '../widgets/debouncer.dart';
 
 class BookListScreen extends StatefulWidget {
   @override
@@ -17,7 +18,8 @@ class _BookListScreenState extends State<BookListScreen> {
   int _currentPage = 1;
   final int _pageSize = 10;
   bool _isLoading = false;
-
+  TextEditingController _searchController = TextEditingController();
+  final Debouncer _debouncer = Debouncer(milliseconds: 500);
   List<BookModel> books = [];
 
   @override
@@ -40,6 +42,7 @@ class _BookListScreenState extends State<BookListScreen> {
   }
 
   _fetchBooks([String? query]) async {
+    print("---------------Fetching-----------");
     setState(() {
       _isLoading = true;
     });
@@ -68,6 +71,7 @@ class _BookListScreenState extends State<BookListScreen> {
   }
 
   void _clearBooks() {
+    print("---------------Clear-----------");
     setState(() {
       books.clear();
       _currentPage = 1;
@@ -93,6 +97,8 @@ class _BookListScreenState extends State<BookListScreen> {
             delegate: SliverSearchAppBar(
               clearBooks: _clearBooks,
               fetchBooks: _fetchBooks,
+              searchController: _searchController,
+              debouncer: _debouncer,
             ), //-----------------to change
             pinned: true,
           ),
