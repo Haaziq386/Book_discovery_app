@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const String baseUrl = "https://gutendex.com/books/";
+const String baseUrl = "https://gutendex.com/books";
 final Color? kMainColor = Color(0xFFFED6B6);
 
 /// Construct a color from a hex code string, of the format #RRGGBB.

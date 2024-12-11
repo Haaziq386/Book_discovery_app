@@ -1,5 +1,7 @@
+import 'package:book_discovery_app/widgets/loading_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:book_discovery_app/models/book_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class BookItem extends StatelessWidget {
   final BookModel book;
@@ -20,11 +22,13 @@ class BookItem extends StatelessWidget {
             book.coverImage != null
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(8.0), // Rounded corners
-                    child: Image.network(
-                      book.coverImage!,
-                      width: 80, // Adjust width
-                      height: 120, // Adjust height
+                    child: CachedNetworkImage(
+                      imageUrl: book.coverImage!,
+                      width: 80,
+                      height: 120,
                       fit: BoxFit.fill,
+                      placeholder: (context, url) => LoadingSpinner(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
                   )
                 : Icon(Icons.book, size: 80), // Fallback icon with similar size

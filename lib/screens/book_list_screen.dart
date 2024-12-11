@@ -4,8 +4,6 @@ import '../widgets/book_item.dart';
 import '../widgets/loading_spinner.dart';
 import '../services/api_service.dart';
 import '../models/book_model.dart';
-import '../utils/pagination_helper.dart';
-import '../utils/constants.dart';
 import '../widgets/sliver_search.dart';
 
 class BookListScreen extends StatefulWidget {
@@ -14,87 +12,66 @@ class BookListScreen extends StatefulWidget {
 }
 
 class _BookListScreenState extends State<BookListScreen> {
-  final ApiService apiService = ApiService(baseUrl: baseUrl);
-  final PaginationHelper paginationHelper = PaginationHelper();
-  ScrollController?
-      _scrollController; // Nullable ScrollController -> added to handle hot reloads
+  final ScrollController _scrollController = ScrollController();
+  final ApiProvider _apiProvider = ApiProvider();
+  int _currentPage = 1;
+  final int _pageSize = 10;
+  bool _isLoading = false;
 
   List<BookModel> books = [];
-  String searchTerm = "";
 
   @override
   void initState() {
     super.initState();
-    _initializeScrollController();
-    fetchBooks();
-  }
-
-  void _initializeScrollController() {
-    _scrollController
-        ?.dispose(); // Dispose old controller if hot reload caused issues
-    _scrollController = ScrollController();
-    _scrollController!.addListener(_scrollListener);
+    _fetchBooks();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >
+              _scrollController.position.maxScrollExtent * 0.7 &&
+          !_isLoading) {
+        _fetchBooks();
+      }
+    });
   }
 
   @override
   void dispose() {
-    _scrollController?.removeListener(_scrollListener);
-    _scrollController?.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
-  Future<void> fetchBooks({bool isSearch = false}) async {
-    if (!isSearch && !paginationHelper.shouldLoadMore()) return;
-
+  _fetchBooks([String? query]) async {
     setState(() {
-      paginationHelper.setLoading(true);
+      _isLoading = true;
     });
-
     try {
-      final data = await apiService.fetchBooks(
-        isSearch && searchTerm.isNotEmpty
-            ? "$baseUrl?search=$searchTerm"
-            : paginationHelper.nextUrl ??
-                baseUrl, // initial loading not happening could be due to this line :: as nexturl not set intially
-        //solved by adding baseUrl as default value in  PaginationHelper class
-      );
+      // Fetch books for the current page
+      print("current page: $_currentPage");
+      List<BookModel> newBooks;
+      if (query?.isNotEmpty == true) {
+        _clearBooks();
+        newBooks = await _apiProvider.searchBooks(query!);
+      } else {
+        newBooks = await _apiProvider.fetchBooks(_currentPage, _pageSize);
+      }
 
       setState(() {
-        print("json: ${data}"); //debugging statement
-        if (isSearch) {
-          books = (data['results'] as List)
-              .map((json) => BookModel.fromJson(json))
-              .toList();
-          paginationHelper
-              .setNextUrl(data['next']); // Reset pagination for search
-        } else {
-          books.addAll((data['results'] as List)
-              .map((json) => BookModel.fromJson(json)));
-          paginationHelper.setNextUrl(data['next']); // Set next URL
-        }
+        books.addAll(newBooks);
+        _currentPage++; // Increment the page for the next fetch
       });
     } catch (e) {
-      print('Error fetching books: $e');
+      print("Error fetching books: $e");
     } finally {
       setState(() {
-        paginationHelper.setLoading(false);
+        _isLoading = false;
       });
     }
   }
 
-  void _scrollListener() {
-    if (_scrollController != null &&
-        _scrollController!.position.pixels ==
-            _scrollController!.position.maxScrollExtent) {
-      fetchBooks(); // Trigger fetch when reaching the end of the list -> allowing going to next page of API
-    }
-  }
-
-  void onSearchChanged(String query) {
+  void _clearBooks() {
     setState(() {
-      searchTerm = query;
+      books.clear();
+      _currentPage = 1;
     });
-    fetchBooks(isSearch: true);
   }
 
   @override
@@ -108,15 +85,19 @@ class _BookListScreenState extends State<BookListScreen> {
     ];
     return Scaffold(
       body: CustomScrollView(
-        controller: _scrollController, // Use scroll controller
+        controller:
+            _scrollController, // Use scroll controller   -have to see to this
         slivers: [
           // Add the SliverSearchAppBar
           SliverPersistentHeader(
-            delegate: SliverSearchAppBar(onSearchChanged: onSearchChanged),
+            delegate: SliverSearchAppBar(
+              clearBooks: _clearBooks,
+              fetchBooks: _fetchBooks,
+            ), //-----------------to change
             pinned: true,
           ),
           // Add the book list as a SliverList
-          books.isEmpty && paginationHelper.isLoading
+          books.isEmpty && _isLoading
               ? SliverToBoxAdapter(
                   child: Center(
                     child: LoadingSpinner(),
@@ -126,7 +107,7 @@ class _BookListScreenState extends State<BookListScreen> {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       if (index == books.length) {
-                        return paginationHelper.isLoading
+                        return _isLoading
                             ? LoadingSpinner(size: 30)
                             : SizedBox.shrink();
                       }

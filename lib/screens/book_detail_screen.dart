@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:book_discovery_app/widgets/custom_tab_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class BookDetailScreen extends StatelessWidget {
   final BookModel book;
@@ -60,7 +61,9 @@ class BookDetailScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                               image: DecorationImage(
                                 image: book.coverImage != null
-                                    ? NetworkImage(book.coverImage!)
+                                    // ? NetworkImage(book.coverImage!)
+                                    ? CachedNetworkImageProvider(
+                                        book.coverImage!)
                                     : AssetImage(
                                             'assets/icons/book_placeholder.gif')
                                         as ImageProvider,

@@ -55,9 +55,15 @@ class BackgroundWaveClipper extends CustomClipper<Path> {
 }
 
 class SliverSearchAppBar extends SliverPersistentHeaderDelegate {
-  final ValueChanged<String> onSearchChanged; // Callback for search input
+  TextEditingController _searchController = TextEditingController();
 
-  const SliverSearchAppBar({required this.onSearchChanged});
+  final VoidCallback clearBooks;
+  final Function(String?) fetchBooks;
+
+  SliverSearchAppBar({
+    required this.clearBooks,
+    required this.fetchBooks,
+  });
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
@@ -110,7 +116,8 @@ class SliverSearchAppBar extends SliverPersistentHeaderDelegate {
           right: 16,
           child: SizedBox(
             width: MediaQuery.of(context).size.width - 32,
-            child: TextField(
+            child: TextFormField(
+              controller: _searchController,
               decoration: InputDecoration(
                 hintText: 'Search by title, author...',
                 filled: true,
@@ -120,12 +127,21 @@ class SliverSearchAppBar extends SliverPersistentHeaderDelegate {
                 border: _border(grey),
                 enabledBorder: _border(grey),
                 contentPadding: const EdgeInsets.symmetric(vertical: 20),
-                prefixIcon: const Icon(
-                  Icons.search,
-                  color: Colors.grey,
+                prefixIcon: IconButton(
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () {
+                    clearBooks();
+                    fetchBooks(_searchController.text);
+                  },
                 ),
               ),
-              onChanged: onSearchChanged,
+              onFieldSubmitted: (value) {
+                clearBooks();
+                fetchBooks(value);
+              },
             ),
           ),
         )
