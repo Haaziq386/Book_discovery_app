@@ -1,9 +1,6 @@
-import 'dart:ui';
 import 'package:book_discovery_app/models/book_model.dart';
 import 'package:book_discovery_app/utils/constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:book_discovery_app/widgets/custom_tab_indicator.dart';
