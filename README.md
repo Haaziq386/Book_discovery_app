@@ -96,7 +96,7 @@ lib/
 
 ## Usage
 
-1. Launch the app on your device using the Book-Inator.apk.
+1. Launch the app on your device using the `Book-Inator.apk`.
 2. Use the search bar to look up books by title or author.
 3. Browse through the endless scrollable list of books.
 4. Tap on a book to view more details.
