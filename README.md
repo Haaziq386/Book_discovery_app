@@ -4,7 +4,7 @@ Book-Inator is a modern Flutter-based book discovery app that allows users to br
 
 ---
 
-## ScreenShots
+## Screenshots
 
 ---
 
